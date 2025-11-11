@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mess Menu</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --card-bg: #ffffff;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tab-content {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+        }
+
+        .weekly-menu-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .weekly-menu-table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .weekly-menu-table td {
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .day-header {
+            background: var(--secondary);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            padding: 15px !important;
+            font-size: 1rem;
+        }
+
+        .meal-type {
+            background: var(--light);
+            font-weight: 600;
+            text-align: center;
+            width: 100px;
+            border-right: 2px solid #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        .meal-content {
+            padding: 8px;
+            min-height: 50px;
+            font-size: 0.9rem;
+        }
+
+        .today-header {
+            background-color: var(--warning) !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+
+            .header {
+                margin-bottom: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .tab-content {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+
+            .weekly-menu-table {
+                margin-top: 8px;
+                font-size: 0.8rem;
+            }
+
+            .weekly-menu-table th {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+
+            .weekly-menu-table td {
+                padding: 6px;
+            }
+
+            .day-header {
+                padding: 10px !important;
+                font-size: 0.9rem;
+            }
+
+            .meal-type {
+                width: 80px;
+                font-size: 0.8rem;
+            }
+
+            .meal-content {
+                padding: 6px;
+                min-height: 45px;
+                font-size: 0.8rem;
+            }
+
+            .loading {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                padding: 0;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .tab-content {
+                padding: 8px;
+                border-radius: 6px;
+            }
+
+            .weekly-menu-table {
+                margin-top: 5px;
+            }
+
+            .weekly-menu-table th {
+                padding: 6px;
+            }
+
+            .weekly-menu-table td {
+                padding: 4px;
+            }
+
+            .day-header {
+                padding: 8px !important;
+                font-size: 0.8rem;
+            }
+
+            .meal-type {
+                width: 70px;
+                font-size: 0.75rem;
+            }
+
+            .meal-content {
+                padding: 4px;
+                min-height: 40px;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .meal-type {
+                width: 60px;
+                font-size: 0.7rem;
+            }
+
+            .meal-content {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mess Menu</h1>
+        </div>
+
+        <!-- View Menu Section -->
+        <div id="view-menu" class="tab-content">
+            <div class="weekly-menu-container">
+                <table class="weekly-menu-table" id="weekly-menu-table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Current Week Menu</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weekly-menu-body">
+                        <tr>
+                            <td colspan="2" class="loading">
+                                <i class="fas fa-spinner fa-spin"></i> Loading menu...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        // Firebase configuration from your original app
+        const firebaseConfig = {
+            apiKey: "AIzaSyB44U0pf_i3PVNou5ounW14hC2BjLk4EQc",
+            authDomain: "mess-management-app-29253.firebaseapp.com",
+            projectId: "mess-management-app-29253",
+            storageBucket: "mess-management-app-29253.firebasestorage.app",
+            messagingSenderId: "637261673523",
+            appId: "1:637261673523:web:930acaf849f55fb5abdf46"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Collection name from your original app
+        const WEEKLY_MENU_COLLECTION = 'weekly_menu';
+
+        // Global variables
+        let unsubscribeWeeklyMenu = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrentWeek();
+        });
+
+        // Get today's date in YYYY-MM-DD format
+        function getToday() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // Get week start date (Monday)
+        function getWeekStartDate(offset = 0) {
+            const date = new Date();
+            const day = date.getDay();
+            const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
+            const monday = new Date(date.setDate(diff));
+            monday.setDate(monday.getDate() + (offset * 7));
+            return monday.toISOString().split('T')[0];
+        }
+
+        // Get dates for a week
+        function getWeekDates(weekStartDate) {
+            const dates = [];
+            const startDate = new Date(weekStartDate);
+            
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                dates.push(date.toISOString().split('T')[0]);
+            }
+            
+            return dates;
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Get day name from date
+        function getDayName(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString(undefined, { weekday: 'long' });
+        }
+
+        // Load current week data from Firebase
+        function loadCurrentWeek() {
+            const weekStartDate = getWeekStartDate(0); // Current week only
+            
+            // Set up real-time listener for weekly menu
+            unsubscribeWeeklyMenu = db.collection(WEEKLY_MENU_COLLECTION)
+                .where('weekStart', '==', weekStartDate)
+                .onSnapshot((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const doc = querySnapshot.docs[0];
+                        const weeklyMenu = { id: doc.id, ...doc.data() };
+                        console.log('Weekly menu loaded from Firebase:', weeklyMenu);
+                        displayWeeklyMenu(weeklyMenu);
+                    } else {
+                        // No menu found for current week
+                        console.log('No weekly menu found for current week');
+                        displayNoMenuMessage();
+                    }
+                }, (error) => {
+                    console.error('Error loading weekly menu:', error);
+                    displayErrorMessage('Error loading menu. Please check connection.');
+                });
+        }
+
+        // Display weekly menu
+        function displayWeeklyMenu(weeklyMenu) {
+            const weeklyMenuBody = document.getElementById('weekly-menu-body');
+            const weekDates = getWeekDates(weeklyMenu.weekStart);
+            const today = getToday();
+            
+            weeklyMenuBody.innerHTML = '';
+            
+            const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            dayNames.forEach((dayName, index) => {
+                const date = weekDates[index];
+                const isToday = date === today;
+                const dayData = weeklyMenu.days[index] || { breakfast: '', lunch: '', dinner: '' };
+                
+                // For Sunday, rename lunch to brunch
+                const mealTypes = index === 6 ? 
+                    ['Breakfast', 'Brunch', 'Dinner'] : 
+                    ['Breakfast', 'Lunch', 'Dinner'];
+                
+                const mealValues = index === 6 ? 
+                    [dayData.breakfast, dayData.lunch, dayData.dinner] : 
+                    [dayData.breakfast, dayData.lunch, dayData.dinner];
+                
+                // Day header row
+                const dayHeaderRow = document.createElement('tr');
+                dayHeaderRow.innerHTML = `
+                    <td colspan="2" class="day-header ${isToday ? 'today-header' : ''}">
+                        ${dayName} - ${formatDate(date)}
+                    </td>
+                `;
+                weeklyMenuBody.appendChild(dayHeaderRow);
+                
+                // Meal rows
+                mealTypes.forEach((mealType, mealIndex) => {
+                    const mealRow = document.createElement('tr');
+                    const mealValue = mealValues[mealIndex] || 'Not set';
+                    
+                    mealRow.innerHTML = `
+                        <td class="meal-type">${mealType}</td>
+                        <td class="meal-content">${mealValue}</td>
+                    `;
+                    weeklyMenuBody.appendChild(mealRow);
+                });
+            });
+        }
+
+        // Display message when no menu is found
+        function displayNoMenuMessage() {
+            const weeklyMenuBody = document.getElementById('weekly-menu-body');
+            weeklyMenuBody.innerHTML = `
+                <tr>
+                    <td colspan="2" class="loading">
+                        <i class="fas fa-info-circle"></i> No menu available for this week.
+                    </td>
+                </tr>
+            `;
+        }
+
+        // Display error message
+        function displayErrorMessage(message) {
+            const weeklyMenuBody = document.getElementById('weekly-menu-body');
+            weeklyMenuBody.innerHTML = `
+                <tr>
+                    <td colspan="2" class="loading" style="color: var(--accent);">
+                        <i class="fas fa-exclamation-triangle"></i> ${message}
+                    </td>
+                </tr>
+            `;
+        }
+
+        // Clean up when page unloads
+        window.addEventListener('beforeunload', function() {
+            if (unsubscribeWeeklyMenu) {
+                unsubscribeWeeklyMenu();
+            }
+        });
+    </script>
+</body>
+</html>
