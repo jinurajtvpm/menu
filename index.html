@@ -25,6 +25,12 @@
             --dinner-border: #9c27b0;
             --today-bg: #fff3e0;
             --today-border: #ff9800;
+            --today-breakfast-bg: #fff3cd;
+            --today-lunch-bg: #d1ecf1;
+            --today-brunch-bg: #d4edda;
+            --today-dinner-bg: #e2e3f3;
+            --meal-title-bg: #f8f9fa;
+            --meal-title-color: #495057;
         }
 
         * {
@@ -113,31 +119,39 @@
             font-size: 0.9rem;
         }
 
-        /* Color coding for meal types */
+        /* Color coding for meal types - only for today */
         .breakfast {
-            background-color: var(--breakfast-bg);
-            border-left: 4px solid var(--breakfast-border);
+            background-color: white;
+            border-left: 4px solid #e0e0e0;
         }
 
         .lunch {
-            background-color: var(--lunch-bg);
-            border-left: 4px solid var(--lunch-border);
+            background-color: white;
+            border-left: 4px solid #e0e0e0;
         }
 
         .brunch {
-            background-color: var(--brunch-bg);
-            border-left: 4px solid var(--brunch-border);
+            background-color: white;
+            border-left: 4px solid #e0e0e0;
         }
 
         .dinner {
-            background-color: var(--dinner-bg);
-            border-left: 4px solid var(--dinner-border);
+            background-color: white;
+            border-left: 4px solid #e0e0e0;
         }
 
-        /* Today highlighting */
+        /* Meal title styling for non-today days */
+        .meal-title {
+            background-color: var(--meal-title-bg);
+            color: var(--meal-title-color);
+        }
+
+        /* Today highlighting with embossed effect */
         .today-header {
             background-color: var(--warning) !important;
             position: relative;
+            box-shadow: inset 0 -2px 4px rgba(0,0,0,0.1), 
+                        inset 0 2px 4px rgba(255,255,255,0.3);
         }
 
         .today-header::after {
@@ -151,11 +165,64 @@
             border-radius: 4px;
             font-size: 0.7rem;
             font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .today-meal {
-            background-color: var(--today-bg) !important;
+            background-color: white !important;
+        }
+
+        .today-breakfast {
+            background-color: var(--today-breakfast-bg) !important;
             border-left: 4px solid var(--today-border) !important;
+            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.5),
+                        inset -2px -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .today-lunch {
+            background-color: var(--today-lunch-bg) !important;
+            border-left: 4px solid var(--today-border) !important;
+            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.5),
+                        inset -2px -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .today-brunch {
+            background-color: var(--today-brunch-bg) !important;
+            border-left: 4px solid var(--today-border) !important;
+            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.5),
+                        inset -2px -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .today-dinner {
+            background-color: var(--today-dinner-bg) !important;
+            border-left: 4px solid var(--today-border) !important;
+            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.5),
+                        inset -2px -2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Today meal titles with embossed effect */
+        .today-breakfast.meal-type {
+            background-color: var(--today-breakfast-bg) !important;
+            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.5),
+                        inset -2px -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .today-lunch.meal-type {
+            background-color: var(--today-lunch-bg) !important;
+            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.5),
+                        inset -2px -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .today-brunch.meal-type {
+            background-color: var(--today-brunch-bg) !important;
+            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.5),
+                        inset -2px -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .today-dinner.meal-type {
+            background-color: var(--today-dinner-bg) !important;
+            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.5),
+                        inset -2px -2px 4px rgba(0,0,0,0.1);
         }
 
         .loading {
@@ -293,7 +360,6 @@
         <div id="view-menu" class="tab-content">
             <div class="weekly-menu-container">
                 <table class="weekly-menu-table" id="weekly-menu-table">
-                   
                     <tbody id="weekly-menu-body">
                         <tr>
                             <td colspan="2" class="loading">
@@ -444,27 +510,52 @@
                     
                     // Determine meal class based on meal type and whether it's today
                     let mealClass = '';
+                    let mealTitleClass = '';
+                    
                     if (isToday) {
-                        mealClass = 'today-meal';
+                        // Use specific today classes for each meal type
+                        switch(mealType.toLowerCase()) {
+                            case 'breakfast':
+                                mealClass = 'today-breakfast';
+                                mealTitleClass = 'today-breakfast meal-type';
+                                break;
+                            case 'lunch':
+                                mealClass = 'today-lunch';
+                                mealTitleClass = 'today-lunch meal-type';
+                                break;
+                            case 'brunch':
+                                mealClass = 'today-brunch';
+                                mealTitleClass = 'today-brunch meal-type';
+                                break;
+                            case 'dinner':
+                                mealClass = 'today-dinner';
+                                mealTitleClass = 'today-dinner meal-type';
+                                break;
+                        }
                     } else {
+                        // Use regular meal type classes for other days
                         switch(mealType.toLowerCase()) {
                             case 'breakfast':
                                 mealClass = 'breakfast';
+                                mealTitleClass = 'meal-type meal-title';
                                 break;
                             case 'lunch':
                                 mealClass = 'lunch';
+                                mealTitleClass = 'meal-type meal-title';
                                 break;
                             case 'brunch':
                                 mealClass = 'brunch';
+                                mealTitleClass = 'meal-type meal-title';
                                 break;
                             case 'dinner':
                                 mealClass = 'dinner';
+                                mealTitleClass = 'meal-type meal-title';
                                 break;
                         }
                     }
                     
                     mealRow.innerHTML = `
-                        <td class="meal-type ${mealClass}">${mealType}</td>
+                        <td class="${mealTitleClass}">${mealType}</td>
                         <td class="meal-content ${mealClass}">${mealValue}</td>
                     `;
                     weeklyMenuBody.appendChild(mealRow);
