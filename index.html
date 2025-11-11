@@ -15,6 +15,16 @@
             --warning: #f39c12;
             --card-bg: #ffffff;
             --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --breakfast-bg: #fff9e6;
+            --breakfast-border: #ffd166;
+            --lunch-bg: #e6f7ff;
+            --lunch-border: #4cc9f0;
+            --brunch-bg: #e8f5e9;
+            --brunch-border: #4caf50;
+            --dinner-bg: #f3e5f5;
+            --dinner-border: #9c27b0;
+            --today-bg: #fff3e0;
+            --today-border: #ff9800;
         }
 
         * {
@@ -90,7 +100,6 @@
         }
 
         .meal-type {
-            background: var(--light);
             font-weight: 600;
             text-align: center;
             width: 100px;
@@ -104,8 +113,49 @@
             font-size: 0.9rem;
         }
 
+        /* Color coding for meal types */
+        .breakfast {
+            background-color: var(--breakfast-bg);
+            border-left: 4px solid var(--breakfast-border);
+        }
+
+        .lunch {
+            background-color: var(--lunch-bg);
+            border-left: 4px solid var(--lunch-border);
+        }
+
+        .brunch {
+            background-color: var(--brunch-bg);
+            border-left: 4px solid var(--brunch-border);
+        }
+
+        .dinner {
+            background-color: var(--dinner-bg);
+            border-left: 4px solid var(--dinner-border);
+        }
+
+        /* Today highlighting */
         .today-header {
             background-color: var(--warning) !important;
+            position: relative;
+        }
+
+        .today-header::after {
+            content: "TODAY";
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .today-meal {
+            background-color: var(--today-bg) !important;
+            border-left: 4px solid var(--today-border) !important;
         }
 
         .loading {
@@ -392,9 +442,30 @@
                     const mealRow = document.createElement('tr');
                     const mealValue = mealValues[mealIndex] || 'Not set';
                     
+                    // Determine meal class based on meal type and whether it's today
+                    let mealClass = '';
+                    if (isToday) {
+                        mealClass = 'today-meal';
+                    } else {
+                        switch(mealType.toLowerCase()) {
+                            case 'breakfast':
+                                mealClass = 'breakfast';
+                                break;
+                            case 'lunch':
+                                mealClass = 'lunch';
+                                break;
+                            case 'brunch':
+                                mealClass = 'brunch';
+                                break;
+                            case 'dinner':
+                                mealClass = 'dinner';
+                                break;
+                        }
+                    }
+                    
                     mealRow.innerHTML = `
-                        <td class="meal-type">${mealType}</td>
-                        <td class="meal-content">${mealValue}</td>
+                        <td class="meal-type ${mealClass}">${mealType}</td>
+                        <td class="meal-content ${mealClass}">${mealValue}</td>
                     `;
                     weeklyMenuBody.appendChild(mealRow);
                 });
